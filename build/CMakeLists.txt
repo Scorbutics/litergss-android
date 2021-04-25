@@ -21,14 +21,14 @@ FOREACH(subdir ${SUBDIRS})
 		include(${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/cmake.conf)
 
 		set(${subdir}_downloaded_target ${CMAKE_SOURCE_DIR}/download/${subdir}-${${subdir}_version}*)
-		add_custom_target(${subdir}_download COMMAND /bin/bash -c \"if ! ls ${${subdir}_downloaded_target} &>/dev/null\; then ${${subdir}_download_command}\; fi\"
+		add_custom_target(${subdir}_download COMMAND if ls ${${subdir}_downloaded_target}\; then exit 0\; fi\; ${${subdir}_download_command}
 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/download
 		)
 
 		if(NOT DEFINED ${subdir}_extract_command)
 			set(${subdir}_extract_command tar -zxf ${${subdir}_downloaded_target})
 		endif()
-		add_custom_target(${subdir}_extract COMMAND /bin/bash -c \"[ -d '${subdir}-${${subdir}_version}' ] || ${${subdir}_extract_command}\"
+		add_custom_target(${subdir}_extract COMMAND if test -d '${subdir}-${${subdir}_version}'\; then exit 0\; fi\; ${${subdir}_extract_command}
 			WORKING_DIRECTORY ${${subdir}_build_dir}
 			DEPENDS ${subdir}_download
 		)
@@ -39,7 +39,7 @@ FOREACH(subdir ${SUBDIRS})
 			DEPENDS ${subdir}_extract
 		)
 
-		add_custom_target(${subdir}_configure COMMAND /bin/bash -c \"[ -f '../.configure.done' ] && exit 0 || ${${subdir}_configure_command} && touch ../.configure.done\"
+		add_custom_target(${subdir}_configure COMMAND if test -f '../.configure.done'\; then exit 0\; fi\; ${${subdir}_configure_command} && touch ../.configure.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_patch
 		)
@@ -47,7 +47,7 @@ FOREACH(subdir ${SUBDIRS})
 		if(NOT DEFINED ${subdir}_build_command)
 			set(${subdir}_build_command make)
 		endif()
-		add_custom_target(${subdir}_build COMMAND /bin/bash -c \"[ -f '../.build.done' ] && exit 0 || ${${subdir}_build_command} && touch ../.build.done\"
+		add_custom_target(${subdir}_build COMMAND if test -f '../.build.done'\; then exit 0\; fi\; ${${subdir}_build_command} && touch ../.build.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_configure
 		)
@@ -55,7 +55,7 @@ FOREACH(subdir ${SUBDIRS})
 		if(NOT DEFINED ${subdir}_install_command)
 			set(${subdir}_install_command make install DESTDIR=${CMAKE_SOURCE_DIR}/target)
 		endif()
-		add_custom_target(${subdir}_install COMMAND /bin/bash -c \"[ -f "../.install.done" ] && exit 0 || ${${subdir}_install_command} && touch ../.install.done \"
+		add_custom_target(${subdir}_install COMMAND if test -f '../.install.done'\; then exit 0\; fi\; ${${subdir}_install_command} && touch ../.install.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_build
 		)
@@ -68,4 +68,10 @@ FOREACH(subdir ${SUBDIRS})
 	endif()
 ENDFOREACH()
 
-add_custom_target(everything ALL DEPENDS rubyfull sfml)
+add_custom_target(zip ALL 
+	COMMAND
+	zip --symlinks -r app.zip
+		usr/lib/lib*.so*
+		usr/local/lib/lib*.so*
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
+	DEPENDS sfml rubyfull)

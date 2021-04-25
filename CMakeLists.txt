@@ -8,6 +8,6 @@ file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/target/usr/lib)
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/target/usr/include)
 
 configure_file(${CMAKE_SOURCE_DIR}/tools/env.src.template ${CMAKE_SOURCE_DIR}/target/env.src @ONLY)
-set(SETUP_COMMAND source ${CMAKE_SOURCE_DIR}/target/env.src)
+set(SETUP_COMMAND . ${CMAKE_SOURCE_DIR}/target/env.src)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/build)

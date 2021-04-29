@@ -21,7 +21,7 @@ FOREACH(subdir ${SUBDIRS})
 		include(${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/cmake.conf)
 
 		set(${subdir}_downloaded_target ${CMAKE_SOURCE_DIR}/download/${subdir}-${${subdir}_version}*)
-		add_custom_target(${subdir}_download COMMAND if ls ${${subdir}_downloaded_target}\; then exit 0\; fi\; ${${subdir}_download_command}
+		add_custom_target(${subdir}_download COMMAND if ls ${${subdir}_downloaded_target} >/dev/null\; then exit 0\; fi\; ${${subdir}_download_command}
 			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/download
 		)
 
@@ -74,4 +74,4 @@ add_custom_target(zip ALL
 		usr/lib/lib*.so*
 		usr/local/lib/lib*.so*
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
-	DEPENDS sfml rubyfull)
+	DEPENDS litecgss rubyfull)

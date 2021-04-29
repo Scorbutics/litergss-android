@@ -71,8 +71,8 @@ ENDFOREACH()
 add_custom_target(raw ALL 
 	COMMAND
 	mkdir -p raw &&
-	cp usr/lib/lib*.so raw/ &&
-	cp usr/local/lib/lib*.so raw/ &&
+	cp usr/lib/lib*.so* raw/ &&
+	cp usr/local/lib/lib*.so* raw/ &&
 	cp usr/local/lib/libsfml-main.a raw/ &&
 	cp -r usr/local/lib/ruby raw/
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target

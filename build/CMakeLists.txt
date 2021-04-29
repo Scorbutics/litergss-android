@@ -74,4 +74,4 @@ add_custom_target(zip ALL
 		usr/lib/lib*.so*
 		usr/local/lib/lib*.so*
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
-	DEPENDS litecgss rubyfull)
+	DEPENDS litergss2 rubyfull)

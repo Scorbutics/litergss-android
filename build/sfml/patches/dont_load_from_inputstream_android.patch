@@ -18,3 +18,31 @@
  }
  
  
+--- a/src/SFML/Graphics/Font.cpp
++++ b/src/SFML/Graphics/Font.cpp
+@@ -139,8 +139,6 @@ Font::~Font()
+ ////////////////////////////////////////////////////////////
+ bool Font::loadFromFile(const std::string& filename)
+ {
+-    #ifndef SFML_SYSTEM_ANDROID
+-
+     // Cleanup the previous resources
+     cleanup();
+     m_refCount = new int(1);
+@@ -190,16 +188,6 @@ bool Font::loadFromFile(const std::strin
+     m_info.family = face->family_name ? face->family_name : std::string();
+ 
+     return true;
+-
+-    #else
+-
+-    if (m_stream)
+-        delete (priv::ResourceStream*)m_stream;
+-
+-    m_stream = new priv::ResourceStream(filename);
+-    return loadFromStream(*(priv::ResourceStream*)m_stream);
+-
+-    #endif
+ }
+ 
+ 

@@ -34,7 +34,7 @@ FOREACH(subdir ${SUBDIRS})
 		)
 
 		FILE(GLOB ${subdir}_patch_files ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/*)
-		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `ls ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/`\; do echo \$\$p && patch < ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/\$\$p\; done && touch ../.patch.done
+		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `ls ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/`\; do echo \$\$p && patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/\$\$p\; done && touch ../.patch.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}	
 			DEPENDS ${subdir}_extract
 		)

@@ -1,0 +1,44 @@
+--- a/src/SFML/Graphics/Image.cpp
++++ b/src/SFML/Graphics/Image.cpp
+@@ -120,16 +120,7 @@ void Image::create(unsigned int width, u
+ ////////////////////////////////////////////////////////////
+ bool Image::loadFromFile(const std::string& filename)
+ {
+-    #ifndef SFML_SYSTEM_ANDROID
+-
+-        return priv::ImageLoader::getInstance().loadImageFromFile(filename, m_pixels, m_size);
+-
+-    #else
+-
+-        priv::ResourceStream stream(filename);
+-        return loadFromStream(stream);
+-
+-    #endif
++    return priv::ImageLoader::getInstance().loadImageFromFile(filename, m_pixels, m_size);
+ }
+ 
+ 
+--- a/src/SFML/Graphics/Font.cpp
++++ b/src/SFML/Graphics/Font.cpp
+@@ -146,8 +146,6 @@ Font& Font::operator=(Font&&) noexcept =
+ ////////////////////////////////////////////////////////////
+ bool Font::loadFromFile(const std::filesystem::path& filename)
+ {
+-    #ifndef SFML_SYSTEM_ANDROID
+-
+     // Cleanup the previous resources
+     cleanup();
+ 
+@@ -197,12 +195,6 @@ bool Font::loadFromFile(const std::files
+ 
+     return true;
+ 
+-    #else
+-
+-    m_stream = std::make_unique<priv::ResourceStream>(filename);
+-    return loadFromStream(*m_stream);
+-
+-    #endif
+ }
+ 
+ 

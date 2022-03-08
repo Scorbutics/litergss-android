@@ -71,14 +71,53 @@ ENDFOREACH()
 add_custom_target(raw ALL 
 	COMMAND
 	mkdir -p raw &&
-	cp usr/lib/*.so* raw/ &&
-	cp usr/local/lib/*.so* raw/ &&
-	cp usr/local/lib/libsfml-main.a raw/ &&
-	cp -r usr/local/lib/ruby raw/
+	cp -P usr/lib/*.so* raw/ &&
+	cp -P usr/local/lib/*.so* raw/ &&
+	cp -P usr/local/lib/libsfml-main.a raw/ &&
+	cp -P -r usr/local/lib/ruby raw/
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS litergss2 rubyfull)
 
-add_custom_target(zip 
+add_custom_target(android-app ALL 
+	COMMAND
+	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
+	cp ../raw/libssl.so.*.* app/lib/arm64-v8a/ &&
+	cp ../raw/libruby.so.*.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libruby.so.*.*.* &&
+	cp ../raw/libreadline.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libreadline.so.*.* &&
+	cp ../raw/libpanel.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libpanel.so.*.* &&
+	cp ../raw/libncurses.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libncurses.so.*.* &&
+	cp ../raw/libmenu.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libmenu.so.*.* &&
+	cp ../raw/libhistory.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libhistory.so.*.* &&
+	cp ../raw/libgdbm_compat.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libgdbm_compat.so.*.*.* &&
+	cp ../raw/libgdbm.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libgdbm.so.*.*.* &&
+	cp ../raw/libform.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libform.so.*.* &&
+	cp ../raw/libcurses.so app/lib/arm64-v8a/ &&
+	cp ../raw/libcrypto.so.*.* app/lib/arm64-v8a/ &&
+	zip --symlinks arm64-v8a.jar app/* &&
+	mkdir -p ext-native-libs/arm64-v8a/ ext-native-libs/include/ &&
+	cp ../raw/libFLAC.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libFLAC++.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libfreetype.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libogg.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libopenal.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libruby.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libvorbis.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libvorbisenc.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libvorbisfile.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libsfml-*.so ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libsfml-*.a ext-native-libs/arm64-v8a/ &&
+	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
+	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
+	mkdir -p engine-libs/ &&
+	cp ../raw/libLiteCGSS_engine.so engine-libs/ && 
+	cp ../raw/LiteRGSS.so engine-libs/ && 
+	mkdir -p app-internal/ruby &&
+	cp -r ../raw/ruby/* app-internal/ruby/ && 
+	zip --symlinks app-internal.zip app-internal/*
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
+	DEPENDS raw)
+
+add_custom_target(raw-zip 
 	COMMAND
 	zip --symlinks app.zip raw/*
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target

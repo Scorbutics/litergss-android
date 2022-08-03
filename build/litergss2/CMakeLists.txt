@@ -24,5 +24,5 @@ string(REGEX REPLACE "[^;]*CMakeFiles/[^;]+;?" "" SOURCES "${SOURCES}")
 add_library(LiteRGSS ${SOURCES})
 
 set_target_properties(LiteRGSS PROPERTIES PREFIX "")
-set(TARGET_LIBS LiteCGSS_engine sfml-graphics sfml-window sfml-system ruby)
+set(TARGET_LIBS LiteCGSS_engine sfml-graphics sfml-window sfml-system ruby physfs skalog)
 target_link_libraries(LiteRGSS ${TARGET_LIBS})

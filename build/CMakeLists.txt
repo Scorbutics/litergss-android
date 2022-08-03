@@ -93,7 +93,7 @@ add_custom_target(android-app ALL
 	cp ../raw/libform.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libform.so.*.* &&
 	cp ../raw/libcurses.so app/lib/arm64-v8a/ &&
 	cp ../raw/libcrypto.so.*.* app/lib/arm64-v8a/ &&
-	zip --symlinks arm64-v8a.jar app/* &&
+	(cd app/ && zip -r --symlinks ../arm64-v8a.jar *) &&
 	mkdir -p ext-native-libs/arm64-v8a/ ext-native-libs/include/ &&
 	cp ../raw/libFLAC.so ext-native-libs/arm64-v8a/ &&
 	cp ../raw/libFLAC++.so ext-native-libs/arm64-v8a/ &&
@@ -109,16 +109,15 @@ add_custom_target(android-app ALL
 	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
 	mkdir -p engine-libs/ &&
-	cp ../raw/libLiteCGSS_engine.so engine-libs/ && 
 	cp ../raw/LiteRGSS.so engine-libs/ && 
 	mkdir -p app-internal/ruby &&
 	cp -r ../raw/ruby/* app-internal/ruby/ && 
-	zip --symlinks app-internal.zip app-internal/*
+	(cd app-internal && zip -r --symlinks ../app-internal.zip *)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
 
 add_custom_target(raw-zip 
 	COMMAND
-	zip --symlinks app.zip raw/*
+	(cd raw && zip -r --symlinks ../app.zip *)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)

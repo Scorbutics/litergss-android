@@ -35,7 +35,7 @@ FOREACH(subdir ${SUBDIRS})
 
 		FILE(GLOB ${subdir}_patch_files ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/*)
 		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `ls ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/`\; do echo \$\$p && patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/\$\$p\; done && touch ../.patch.done
-			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}	
+			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_extract
 		)
 
@@ -68,7 +68,7 @@ FOREACH(subdir ${SUBDIRS})
 	endif()
 ENDFOREACH()
 
-add_custom_target(raw ALL 
+add_custom_target(raw ALL
 	COMMAND
 	mkdir -p raw &&
 	cp -P usr/lib/*.so* raw/ &&
@@ -78,7 +78,7 @@ add_custom_target(raw ALL
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS litergss2 rubyfull)
 
-add_custom_target(android-app ALL 
+add_custom_target(android-app ALL
 	COMMAND
 	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
 	cp ../raw/libssl.so.*.* app/lib/arm64-v8a/ &&
@@ -108,15 +108,14 @@ add_custom_target(android-app ALL
 	cp ../raw/libsfml-*.a ext-native-libs/arm64-v8a/ &&
 	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
-	mkdir -p engine-libs/ &&
-	cp ../raw/LiteRGSS.so engine-libs/ && 
 	mkdir -p app-internal/ruby &&
-	cp -r ../raw/ruby/* app-internal/ruby/ && 
+	cp ../raw/LiteRGSS.so app-internal/LiteRGSS.so &&
+	cp -r ../raw/ruby/* app-internal/ruby/ &&
 	(cd app-internal && zip -r --symlinks ../app-internal.zip *)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
 
-add_custom_target(raw-zip 
+add_custom_target(raw-zip
 	COMMAND
 	(cd raw && zip -r --symlinks ../app.zip *)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target

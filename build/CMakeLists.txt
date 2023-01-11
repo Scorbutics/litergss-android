@@ -76,7 +76,7 @@ add_custom_target(raw ALL
 	cp -P usr/local/lib/libsfml-main.a raw/ &&
 	cp -P -r usr/local/lib/ruby raw/
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
-	DEPENDS litergss2 rubyfull)
+	DEPENDS litergss2 ruby-sfml-audio rubyfull)
 
 add_custom_target(android-app ALL
 	COMMAND
@@ -110,6 +110,7 @@ add_custom_target(android-app ALL
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
 	mkdir -p app-internal/ruby &&
 	cp ../raw/LiteRGSS.so app-internal/LiteRGSS.so &&
+	cp ../raw/SFMLAudio.so app-internal/SFMLAudio.so &&
 	cp -r ../raw/ruby/* app-internal/ruby/ &&
 	(cd app-internal && zip -r --symlinks ../app-internal.zip *)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target

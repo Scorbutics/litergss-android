@@ -5,7 +5,7 @@ rm -rf CMakeFiles
 rm -rf build/CMakeFiles
 for item in "build"/*
 do
-  [ -d "$item" ] && rm -rf $item/build_dir/*
+  [ -d "$item" ] && rm -rf $item/build_dir/* && rm -rf $item/build_dir/.*
 done
 rm -f build/cmake_install.cmake build/Makefile
 

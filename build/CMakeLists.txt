@@ -33,8 +33,7 @@ FOREACH(subdir ${SUBDIRS})
 			DEPENDS ${subdir}_download
 		)
 
-		FILE(GLOB ${subdir}_patch_files ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/*)
-		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `ls ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/`\; do echo \$\$p && patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/\$\$p\; done && touch ../.patch.done
+		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `find ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches-${${subdir}_version}/ -type f 2>/dev/null \; find ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/ -type f 2>/dev/null`\; do patch -p1 < \$\$p\; done && touch ../.patch.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_extract
 		)
@@ -93,8 +92,9 @@ add_custom_target(android-app ALL
 	cp ../raw/libform.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libform.so.*.* &&
 	cp ../raw/libcurses.so app/lib/arm64-v8a/ &&
 	cp ../raw/libcrypto.so.*.* app/lib/arm64-v8a/ &&
-	(cd app/ && zip -r --symlinks ../arm64-v8a.jar *) &&
-	mkdir -p ext-native-libs/arm64-v8a/ ext-native-libs/include/ &&
+	(cd app/ && zip -r --symlinks ../arm64-v8a.jar * ) &&
+	rm -r app/ &&
+	mkdir -p ext-native-libs/arm64-v8a/ ext-native-libs/include/ ext-native-libs/lib/ &&
 	cp ../raw/libFLAC.so ext-native-libs/arm64-v8a/ &&
 	cp ../raw/libFLAC++.so ext-native-libs/arm64-v8a/ &&
 	cp ../raw/libfreetype.so ext-native-libs/arm64-v8a/ &&
@@ -108,11 +108,9 @@ add_custom_target(android-app ALL
 	cp ../raw/libsfml-*.a ext-native-libs/arm64-v8a/ &&
 	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
-	mkdir -p app-internal/ruby &&
-	cp ../raw/LiteRGSS.so app-internal/LiteRGSS.so &&
-	cp ../raw/SFMLAudio.so app-internal/SFMLAudio.so &&
-	cp -r ../raw/ruby/* app-internal/ruby/ &&
-	(cd app-internal && zip -r --symlinks ../app-internal.zip *)
+	cp ../raw/LiteRGSS.so ext-native-libs/lib/LiteRGSS.so &&
+	cp ../raw/SFMLAudio.so ext-native-libs/lib/SFMLAudio.so &&
+	(cd ../raw && zip -r --symlinks ../android/ext-native-libs/lib/ruby.zip ruby)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
 

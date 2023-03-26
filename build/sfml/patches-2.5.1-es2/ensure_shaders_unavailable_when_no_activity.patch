@@ -1,0 +1,32 @@
+--- a/src/SFML/Graphics/Shader.cpp
++++ b/src/SFML/Graphics/Shader.cpp
+@@ -806,16 +806,21 @@ bool Shader::isAvailable()
+     {
+         checked = true;
+
+-        TransientContextLock contextLock;
++        try {
++            TransientContextLock contextLock;
+
+-        // Make sure that extensions are initialized
+-        sf::priv::ensureExtensionsInit();
++            // Make sure that extensions are initialized
++            sf::priv::ensureExtensionsInit();
+
+-        available = GLEXT_multitexture         &&
+-                    GLEXT_shading_language_100 &&
+-                    GLEXT_shader_objects       &&
+-                    GLEXT_vertex_shader        &&
+-                    GLEXT_fragment_shader;
++            available = GLEXT_multitexture         &&
++                        GLEXT_shading_language_100 &&
++                        GLEXT_shader_objects       &&
++                        GLEXT_vertex_shader        &&
++                        GLEXT_fragment_shader;
++        } catch (std::runtime_error& err) {
++            checked = false;
++            available = false;
++        }
+     }
+
+     return available;

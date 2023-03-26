@@ -1,0 +1,19 @@
+--- a/src/SFML/Main/MainAndroid.cpp
++++ b/src/SFML/Main/MainAndroid.cpp
+@@ -47,6 +47,8 @@
+ #include <android/native_activity.h>
+ #include <cstring>
+
++#define SF_GLAD_EGL_IMPLEMENTATION
++#include "./egl.h"
+
+ extern int main(int argc, char *argv[]);
+
+@@ -489,6 +491,7 @@ JNIEXPORT void ANativeActivity_onCreate(
+     for (unsigned int i = 0; i < sf::Mouse::ButtonCount; i++)
+         states->isButtonPressed[i] = false;
+
++    gladLoaderLoadEGL(EGL_DEFAULT_DISPLAY);
+     states->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+
+     if (savedState != NULL)

@@ -72,7 +72,7 @@ add_custom_target(raw ALL
 	mkdir -p raw &&
 	cp -P usr/lib/*.so* raw/ &&
 	cp -P usr/local/lib/*.so* raw/ &&
-	cp -P usr/local/lib/libsfml-main.a raw/ &&
+	cp -P usr/local/lib/libsfml-main*.a raw/ &&
 	cp -P -r usr/local/lib/ruby raw/
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS litergss2 ruby-sfml-audio rubyfull)

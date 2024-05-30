@@ -81,7 +81,6 @@ add_custom_target(android-app ALL
 	COMMAND
 	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
 	cp ../raw/libssl.so.*.* app/lib/arm64-v8a/ &&
-	cp ../raw/libruby.so.*.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libruby.so.*.*.* &&
 	cp ../raw/libreadline.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libreadline.so.*.* &&
 	cp ../raw/libpanel.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libpanel.so.*.* &&
 	cp ../raw/libncurses.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libncurses.so.*.* &&

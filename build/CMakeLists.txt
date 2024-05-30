@@ -107,8 +107,8 @@ add_custom_target(android-app ALL
 	cp ../raw/libsfml-*.a jniLibs/arm64-v8a/ &&
 	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
-	cp ../raw/LiteRGSS.so jniLibs/arm64-v8a/LiteRGSS.so &&
-	cp ../raw/SFMLAudio.so jniLibs/arm64-v8a/SFMLAudio.so &&
+	cp ../raw/libLiteRGSS.so jniLibs/arm64-v8a/libLiteRGSS.so &&
+	cp ../raw/libSFMLAudio.so jniLibs/arm64-v8a/libSFMLAudio.so &&
 	(cd ../raw && zip -r --symlinks ../android/assets/ruby-stdlib.zip ruby)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)

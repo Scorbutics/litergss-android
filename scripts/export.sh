@@ -2,5 +2,6 @@
 
 # ex: ~/dev/PSDK-android
 HOME_ANDROID_PROJECT="$1"
-cp -f target/android/arm64-v8a.jar "$HOME_ANDROID_PROJECT/app/libs/arm64-v8a.jar"
-cp -rf target/android/ext-native-libs/* "$HOME_ANDROID_PROJECT/app/src/main/ext-native-libs/"
+cp -rf target/android/assets/* "$HOME_ANDROID_PROJECT/app/src/main/assets/"
+cp -rf target/android/ext-native-libs/include/* "$HOME_ANDROID_PROJECT/app/src/main/cpp/external/"
+cp -rf target/android/jniLibs/* "$HOME_ANDROID_PROJECT/app/src/main/jniLibs/"

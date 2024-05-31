@@ -80,17 +80,17 @@ add_custom_target(raw ALL
 add_custom_target(android-app ALL
 	COMMAND
 	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
-	cp ../raw/libssl.so.*.* app/lib/arm64-v8a/ &&
-	cp ../raw/libreadline.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libreadline.so.*.* &&
-	cp ../raw/libpanel.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libpanel.so.*.* &&
-	cp ../raw/libncurses.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libncurses.so.*.* &&
-	cp ../raw/libmenu.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libmenu.so.*.* &&
-	cp ../raw/libhistory.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libhistory.so.*.* &&
-	cp ../raw/libgdbm_compat.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libgdbm_compat.so.*.*.* &&
-	cp ../raw/libgdbm.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libgdbm.so.*.*.* &&
-	cp ../raw/libform.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libform.so.*.* &&
+	cp ../raw/libssl.so app/lib/arm64-v8a/ &&
+	cp ../raw/libreadline.so app/lib/arm64-v8a/ &&
+	cp ../raw/libpanel.so app/lib/arm64-v8a/ &&
+	cp ../raw/libncurses.so app/lib/arm64-v8a/ &&
+	cp ../raw/libmenu.so app/lib/arm64-v8a/ &&
+	cp ../raw/libhistory.so app/lib/arm64-v8a/ &&
+	cp ../raw/libgdbm_compat.so app/lib/arm64-v8a/ &&
+	cp ../raw/libgdbm.so app/lib/arm64-v8a/ &&
+	cp ../raw/libform.so app/lib/arm64-v8a/ &&
 	cp ../raw/libcurses.so app/lib/arm64-v8a/ &&
-	cp ../raw/libcrypto.so.*.* app/lib/arm64-v8a/ &&
+	cp ../raw/libcrypto.so app/lib/arm64-v8a/ &&
 	mkdir -p ext-native-libs/include/ jniLibs/ assets &&
 	(cd app/ && cp -r lib/* ../jniLibs/ ) &&
 	rm -r app/ &&

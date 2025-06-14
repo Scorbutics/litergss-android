@@ -10,5 +10,7 @@ file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/target/usr/include)
 configure_file(${CMAKE_SOURCE_DIR}/tools/env.src.template ${CMAKE_SOURCE_DIR}/target/env.src @ONLY)
 set(SETUP_COMMAND . ${CMAKE_SOURCE_DIR}/target/env.src)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/host)
-add_subdirectory(${CMAKE_SOURCE_DIR}/build)
+add_subdirectory(host)
+add_subdirectory(build)
+
+add_custom_target(all_build ALL DEPENDS build)

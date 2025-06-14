@@ -1,4 +1,3 @@
-
 MACRO(SUBDIRLIST result curdir)
 	FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
 	SET(dirlist "")
@@ -67,7 +66,7 @@ FOREACH(subdir ${SUBDIRS})
 	endif()
 ENDFOREACH()
 
-add_custom_target(raw ALL
+add_custom_target(raw
 	COMMAND
 	mkdir -p raw &&
 	cp -P usr/lib/*.so* raw/ &&
@@ -77,7 +76,7 @@ add_custom_target(raw ALL
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS litergss2 ruby-sfml-audio rubyfull)
 
-add_custom_target(android-app ALL
+add_custom_target(android-app
 	COMMAND
 	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
 	cp ../raw/libssl.so app/lib/arm64-v8a/ &&
@@ -114,7 +113,9 @@ add_custom_target(android-app ALL
 	DEPENDS raw)
 
 add_custom_target(raw-zip
-	COMMAND
-	(cd raw && zip -r --symlinks ../app.zip *)
+	COMMAND true &&
+	( cd raw && zip -r --symlinks ../app.zip * )
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
+
+add_custom_target(build DEPENDS host raw-zip)

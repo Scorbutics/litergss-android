@@ -118,4 +118,4 @@ add_custom_target(raw-zip
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
 
-add_custom_target(build DEPENDS host raw-zip)
+add_custom_target(build DEPENDS host android-app)

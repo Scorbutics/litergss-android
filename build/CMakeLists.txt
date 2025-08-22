@@ -37,7 +37,7 @@ FOREACH(subdir ${SUBDIRS})
 			DEPENDS ${subdir}_extract
 		)
 
-		add_custom_target(${subdir}_configure COMMAND if test -f '../.configure.done'\; then exit 0\; fi\; ${${subdir}_configure_command} && touch ../.configure.done
+		add_custom_target(${subdir}_configure COMMAND if test -f '../.configure.done'\; then exit 0\; fi\; echo 'Using toolchain file ${TOOLCHAIN_FILE}' && ${${subdir}_configure_command} && touch ../.configure.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_patch
 		)
@@ -78,36 +78,36 @@ add_custom_target(raw
 
 add_custom_target(android-app
 	COMMAND
-	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
-	cp ../raw/libssl.so app/lib/arm64-v8a/ &&
-	cp ../raw/libreadline.so app/lib/arm64-v8a/ &&
-	cp ../raw/libpanel.so app/lib/arm64-v8a/ &&
-	cp ../raw/libncurses.so app/lib/arm64-v8a/ &&
-	cp ../raw/libmenu.so app/lib/arm64-v8a/ &&
-	cp ../raw/libhistory.so app/lib/arm64-v8a/ &&
-	cp ../raw/libgdbm_compat.so app/lib/arm64-v8a/ &&
-	cp ../raw/libgdbm.so app/lib/arm64-v8a/ &&
-	cp ../raw/libform.so app/lib/arm64-v8a/ &&
-	cp ../raw/libcurses.so app/lib/arm64-v8a/ &&
-	cp ../raw/libcrypto.so app/lib/arm64-v8a/ &&
+	mkdir -p android/app/lib/${ANDROID_ABI}/ && cd android &&
+	cp ../raw/libssl.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libreadline.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libpanel.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libncurses.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libmenu.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libhistory.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libgdbm_compat.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libgdbm.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libform.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libcurses.so app/lib/${ANDROID_ABI}/ &&
+	cp ../raw/libcrypto.so app/lib/${ANDROID_ABI}/ &&
 	mkdir -p ext-native-libs/include/ jniLibs/ assets &&
 	(cd app/ && cp -r lib/* ../jniLibs/ ) &&
 	rm -r app/ &&
-	cp ../raw/libFLAC.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libFLAC++.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libfreetype.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libogg.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libopenal.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libruby.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libvorbis.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libvorbisenc.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libvorbisfile.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libsfml-*.so jniLibs/arm64-v8a/ &&
-	cp ../raw/libsfml-*.a jniLibs/arm64-v8a/ &&
+	cp ../raw/libFLAC.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libFLAC++.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libfreetype.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libogg.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libopenal.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libruby.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libvorbis.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libvorbisenc.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libvorbisfile.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libsfml-*.so jniLibs/${ANDROID_ABI}/ &&
+	cp ../raw/libsfml-*.a jniLibs/${ANDROID_ABI}/ &&
 	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
-	cp ../raw/libLiteRGSS.so jniLibs/arm64-v8a/libLiteRGSS.so &&
-	cp ../raw/libSFMLAudio.so jniLibs/arm64-v8a/libSFMLAudio.so &&
+	cp ../raw/libLiteRGSS.so jniLibs/${ANDROID_ABI}/libLiteRGSS.so &&
+	cp ../raw/libSFMLAudio.so jniLibs/${ANDROID_ABI}/libSFMLAudio.so &&
 	(cd ../raw && zip -r --symlinks ../android/assets/ruby-stdlib.zip ruby)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)

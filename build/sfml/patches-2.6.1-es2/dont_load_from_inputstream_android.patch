@@ -29,7 +29,7 @@
      // Cleanup the previous resources
      cleanup();
      m_refCount = new int(1);
-@@ -191,16 +189,6 @@ bool Font::loadFromFile(const std::strin
+@@ -189,16 +187,6 @@ bool Font::loadFromFile(const std::strin
      m_info.family = face->family_name ? face->family_name : std::string();
 
      return true;

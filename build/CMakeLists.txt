@@ -1,4 +1,3 @@
-
 MACRO(SUBDIRLIST result curdir)
 	FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
 	SET(dirlist "")
@@ -33,7 +32,7 @@ FOREACH(subdir ${SUBDIRS})
 			DEPENDS ${subdir}_download
 		)
 
-		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `find ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches-${${subdir}_version}/ -type f 2>/dev/null \; find ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/ -type f 2>/dev/null`\; do patch -p1 < \$\$p\; done && touch ../.patch.done
+		add_custom_target(${subdir}_patch COMMAND if test -f '../.patch.done'\; then exit 0\; fi\; cd ${${subdir}_build_dir}/${subdir}-${${subdir}_version} && for p in `find ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches-${${subdir}_version}/ -type f 2>/dev/null \; find ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/patches/ -type f 2>/dev/null`\; do echo \$\$p && patch -p1 < \$\$p\; done && touch ../.patch.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
 			DEPENDS ${subdir}_extract
 		)
@@ -67,55 +66,56 @@ FOREACH(subdir ${SUBDIRS})
 	endif()
 ENDFOREACH()
 
-add_custom_target(raw ALL
+add_custom_target(raw
 	COMMAND
 	mkdir -p raw &&
 	cp -P usr/lib/*.so* raw/ &&
 	cp -P usr/local/lib/*.so* raw/ &&
-	cp -P usr/local/lib/libsfml-main.a raw/ &&
+	cp -P usr/local/lib/libsfml-main*.a raw/ &&
 	cp -P -r usr/local/lib/ruby raw/
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS litergss2 ruby-sfml-audio rubyfull)
 
-add_custom_target(android-app ALL
+add_custom_target(android-app
 	COMMAND
 	mkdir -p android/app/lib/arm64-v8a/ && cd android &&
-	cp ../raw/libssl.so.*.* app/lib/arm64-v8a/ &&
-	cp ../raw/libruby.so.*.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libruby.so.*.*.* &&
-	cp ../raw/libreadline.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libreadline.so.*.* &&
-	cp ../raw/libpanel.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libpanel.so.*.* &&
-	cp ../raw/libncurses.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libncurses.so.*.* &&
-	cp ../raw/libmenu.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libmenu.so.*.* &&
-	cp ../raw/libhistory.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libhistory.so.*.* &&
-	cp ../raw/libgdbm_compat.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libgdbm_compat.so.*.*.* &&
-	cp ../raw/libgdbm.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libgdbm.so.*.*.* &&
-	cp ../raw/libform.so.* app/lib/arm64-v8a/ && rm app/lib/arm64-v8a/libform.so.*.* &&
+	cp ../raw/libssl.so app/lib/arm64-v8a/ &&
+	cp ../raw/libreadline.so app/lib/arm64-v8a/ &&
+	cp ../raw/libpanel.so app/lib/arm64-v8a/ &&
+	cp ../raw/libncurses.so app/lib/arm64-v8a/ &&
+	cp ../raw/libmenu.so app/lib/arm64-v8a/ &&
+	cp ../raw/libhistory.so app/lib/arm64-v8a/ &&
+	cp ../raw/libgdbm_compat.so app/lib/arm64-v8a/ &&
+	cp ../raw/libgdbm.so app/lib/arm64-v8a/ &&
+	cp ../raw/libform.so app/lib/arm64-v8a/ &&
 	cp ../raw/libcurses.so app/lib/arm64-v8a/ &&
-	cp ../raw/libcrypto.so.*.* app/lib/arm64-v8a/ &&
-	(cd app/ && zip -r --symlinks ../arm64-v8a.jar * ) &&
+	cp ../raw/libcrypto.so app/lib/arm64-v8a/ &&
+	mkdir -p ext-native-libs/include/ jniLibs/ assets &&
+	(cd app/ && cp -r lib/* ../jniLibs/ ) &&
 	rm -r app/ &&
-	mkdir -p ext-native-libs/arm64-v8a/ ext-native-libs/include/ ext-native-libs/lib/ &&
-	cp ../raw/libFLAC.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libFLAC++.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libfreetype.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libogg.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libopenal.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libruby.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libvorbis.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libvorbisenc.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libvorbisfile.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libsfml-*.so ext-native-libs/arm64-v8a/ &&
-	cp ../raw/libsfml-*.a ext-native-libs/arm64-v8a/ &&
+	cp ../raw/libFLAC.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libFLAC++.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libfreetype.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libogg.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libopenal.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libruby.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libvorbis.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libvorbisenc.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libvorbisfile.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libsfml-*.so jniLibs/arm64-v8a/ &&
+	cp ../raw/libsfml-*.a jniLibs/arm64-v8a/ &&
 	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
 	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
-	cp ../raw/LiteRGSS.so ext-native-libs/lib/LiteRGSS.so &&
-	cp ../raw/SFMLAudio.so ext-native-libs/lib/SFMLAudio.so &&
-	(cd ../raw && zip -r --symlinks ../android/ext-native-libs/lib/ruby.zip ruby)
+	cp ../raw/libLiteRGSS.so jniLibs/arm64-v8a/libLiteRGSS.so &&
+	cp ../raw/libSFMLAudio.so jniLibs/arm64-v8a/libSFMLAudio.so &&
+	(cd ../raw && zip -r --symlinks ../android/assets/ruby-stdlib.zip ruby)
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
 
 add_custom_target(raw-zip
-	COMMAND
-	(cd raw && zip -r --symlinks ../app.zip *)
+	COMMAND true &&
+	( cd raw && zip -r --symlinks ../app.zip * )
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
 	DEPENDS raw)
+
+add_custom_target(build DEPENDS host android-app)

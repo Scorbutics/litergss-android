@@ -14,14 +14,14 @@ string(REGEX REPLACE "CMakeFiles;" "" SUBDIRS "${SUBDIRS}")
 
 FOREACH(subdir ${SUBDIRS})
 	if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/cmake.conf")
-		set(${subdir}_build_dir "${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/build_dir")
+		set(${subdir}_build_dir "${CMAKE_BINARY_DIR}/${subdir}/build_dir")
 		file(MAKE_DIRECTORY ${${subdir}_build_dir})
 
 		include(${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/cmake.conf)
 
-		set(${subdir}_downloaded_target ${CMAKE_SOURCE_DIR}/download/${subdir}-${${subdir}_version}*)
+		set(${subdir}_downloaded_target ${CMAKE_BINARY_DIR}/download/${subdir}-${${subdir}_version}*)
 		add_custom_target(${subdir}_download COMMAND if ls ${${subdir}_downloaded_target} >/dev/null\; then exit 0\; fi\; ${${subdir}_download_command}
-			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/download
+			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/download
 		)
 
 		if(NOT DEFINED ${subdir}_extract_command)
@@ -51,7 +51,7 @@ FOREACH(subdir ${SUBDIRS})
 		)
 
 		if(NOT DEFINED ${subdir}_install_command)
-			set(${subdir}_install_command make install DESTDIR=${CMAKE_SOURCE_DIR}/target)
+			set(${subdir}_install_command make install DESTDIR=${CMAKE_BINARY_DIR}/target)
 		endif()
 		add_custom_target(${subdir}_install COMMAND if test -f '../.install.done'\; then exit 0\; fi\; ${${subdir}_install_command} && touch ../.install.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
@@ -59,6 +59,12 @@ FOREACH(subdir ${SUBDIRS})
 		)
 
 		add_dependencies(${subdir} ${subdir}_install)
+
+		add_custom_target(${subdir}_clean
+			COMMAND ${CMAKE_COMMAND} -E remove_directory ${${subdir}_build_dir}
+			COMMAND ${CMAKE_COMMAND} -E make_directory ${${subdir}_build_dir}
+			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		)
 
 		if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/cmake-final.conf")
 			include(${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/cmake-final.conf)
@@ -73,7 +79,7 @@ add_custom_target(raw
 	cp -P usr/local/lib/*.so* raw/ &&
 	cp -P usr/local/lib/libsfml-main*.a raw/ &&
 	cp -P -r usr/local/lib/ruby raw/
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
 	DEPENDS litergss2 ruby-sfml-audio rubyfull)
 
 add_custom_target(android-app
@@ -109,13 +115,13 @@ add_custom_target(android-app
 	cp ../raw/libLiteRGSS.so jniLibs/${ANDROID_ABI}/libLiteRGSS.so &&
 	cp ../raw/libSFMLAudio.so jniLibs/${ANDROID_ABI}/libSFMLAudio.so &&
 	(cd ../raw && zip -r --symlinks ../android/assets/ruby-stdlib.zip ruby)
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
 	DEPENDS raw)
 
 add_custom_target(raw-zip
 	COMMAND true &&
 	( cd raw && zip -r --symlinks ../app.zip * )
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/target
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
 	DEPENDS raw)
 
 add_custom_target(build DEPENDS host android-app)

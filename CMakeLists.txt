@@ -7,7 +7,7 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/download)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/target/usr/lib)
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/target/usr/include)
 
-configure_file(${CMAKE_SOURCE_DIR}/tools/env.src.template ${CMAKE_SOURCE_DIR}/target/env.src @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/tools/env.src.template ${CMAKE_BINARY_DIR}/target/env.src @ONLY)
 set(SETUP_COMMAND . ${CMAKE_BINARY_DIR}/target/env.src)
 
 add_subdirectory(host)

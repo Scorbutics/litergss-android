@@ -12,7 +12,7 @@ endif()
 
 project(SFMLAudio CXX)
 
-set(BASE_SOURCE_DIR build_dir/ruby-sfml-audio-1.0.0)
+set(BASE_SOURCE_DIR ruby-sfml-audio-1.0.0)
 
 file(GLOB_RECURSE SOURCES
   ${BASE_SOURCE_DIR}/ext/SFMLAudio/*.h

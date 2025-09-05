@@ -12,7 +12,7 @@ endif()
 
 project(LiteRGSS2 CXX)
 
-set(BASE_SOURCE_DIR build_dir/litergss2-2.0.0)
+set(BASE_SOURCE_DIR litergss2-2.0.0)
 
 file(GLOB_RECURSE SOURCES
   ${BASE_SOURCE_DIR}/ext/LiteRGSS/*.h

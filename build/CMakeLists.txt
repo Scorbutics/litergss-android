@@ -96,25 +96,31 @@ add_custom_target(android-app
 	cp ../raw/libform.so app/lib/${ANDROID_ABI}/ &&
 	cp ../raw/libcurses.so app/lib/${ANDROID_ABI}/ &&
 	cp ../raw/libcrypto.so app/lib/${ANDROID_ABI}/ &&
-	mkdir -p ext-native-libs/include/ jniLibs/ assets &&
-	(cd app/ && cp -r lib/* ../jniLibs/ ) &&
+	mkdir -p include/ lib/ assets &&
+	(cd app/ && cp -r lib/* ../lib/ ) &&
 	rm -r app/ &&
-	cp ../raw/libFLAC.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libFLAC++.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libfreetype.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libogg.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libopenal.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libruby.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libvorbis.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libvorbisenc.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libvorbisfile.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libsfml-*.so jniLibs/${ANDROID_ABI}/ &&
-	cp ../raw/libsfml-*.a jniLibs/${ANDROID_ABI}/ &&
-	cp -r ../usr/local/include/ruby ext-native-libs/include/ &&
-	cp -r ../usr/local/include/SFML ext-native-libs/include/ &&
-	cp ../raw/libLiteRGSS.so jniLibs/${ANDROID_ABI}/libLiteRGSS.so &&
-	cp ../raw/libSFMLAudio.so jniLibs/${ANDROID_ABI}/libSFMLAudio.so &&
-	(cd ../raw && zip -r --symlinks ../android/assets/ruby-stdlib.zip ruby)
+	cp ../raw/libFLAC.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libFLAC++.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libfreetype.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libogg.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libopenal.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libruby.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libvorbis.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libvorbisenc.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libvorbisfile.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libsfml-*.so lib/${ANDROID_ABI}/ &&
+	cp ../raw/libsfml-*.a lib/${ANDROID_ABI}/ &&
+	mkdir -p include/${ANDROID_ABI} &&
+	cp -r ../usr/local/include/${HOST}-*/* include/${ANDROID_ABI} &&
+	cp -r ../usr/local/include/ruby include/ &&
+	cp -r ../usr/local/include/SFML include/ &&
+	cp ../raw/libLiteRGSS.so lib/${ANDROID_ABI}/libLiteRGSS.so &&
+	cp ../raw/libSFMLAudio.so lib/${ANDROID_ABI}/libSFMLAudio.so &&
+	(cd ../raw && 
+		mkdir -p ../android/assets/${ANDROID_ABI} &&
+		zip -r -q --symlinks ../android/assets/ruby-stdlib.zip ruby -x ruby/*/${HOST}-* &&
+		zip -r -q --symlinks ../android/assets/${ANDROID_ABI}/ruby-stdlib-ext.zip ruby/*/${HOST}-*
+	)
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
 	DEPENDS raw)
 

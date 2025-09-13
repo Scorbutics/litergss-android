@@ -51,7 +51,7 @@ FOREACH(subdir ${SUBDIRS})
 		)
 
 		if(NOT DEFINED ${subdir}_install_command)
-			set(${subdir}_install_command make install DESTDIR=${CMAKE_BINARY_DIR}/target)
+			set(${subdir}_install_command make install DESTDIR=${CMAKE_BINARY_DIR}/target/${HOST})
 		endif()
 		add_custom_target(${subdir}_install COMMAND if test -f '../.install.done'\; then exit 0\; fi\; ${${subdir}_install_command} && touch ../.install.done
 			WORKING_DIRECTORY ${${subdir}_build_dir}/${subdir}-${${subdir}_version}
@@ -63,6 +63,26 @@ FOREACH(subdir ${SUBDIRS})
 		add_custom_target(${subdir}_clean
 			COMMAND ${CMAKE_COMMAND} -E remove_directory ${${subdir}_build_dir}
 			COMMAND ${CMAKE_COMMAND} -E make_directory ${${subdir}_build_dir}
+			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		)
+
+		add_custom_target(${subdir}_clean_configure
+			COMMAND ${CMAKE_COMMAND} -E remove ${${subdir}_build_dir}/.configure.done
+			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		)
+
+		add_custom_target(${subdir}_clean_build
+			COMMAND ${CMAKE_COMMAND} -E remove ${${subdir}_build_dir}/.build.done
+			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		)
+
+		add_custom_target(${subdir}_clean_install
+			COMMAND ${CMAKE_COMMAND} -E remove ${${subdir}_build_dir}/.install.done
+			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		)
+
+		add_custom_target(${subdir}_clean_soft
+			COMMAND ${CMAKE_COMMAND} -E remove ${${subdir}_build_dir}/.*.done
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 		)
 
@@ -79,55 +99,55 @@ add_custom_target(raw
 	cp -P usr/local/lib/*.so* raw/ &&
 	cp -P usr/local/lib/libsfml-main*.a raw/ &&
 	cp -P -r usr/local/lib/ruby raw/
-	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/${HOST}
 	DEPENDS litergss2 ruby-sfml-audio rubyfull)
 
-add_custom_target(android-app
+add_custom_target(app
 	COMMAND
-	mkdir -p android/app/lib/${ANDROID_ABI}/ && cd android &&
-	cp ../raw/libssl.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libreadline.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libpanel.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libncurses.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libmenu.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libhistory.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libgdbm_compat.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libgdbm.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libform.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libcurses.so app/lib/${ANDROID_ABI}/ &&
-	cp ../raw/libcrypto.so app/lib/${ANDROID_ABI}/ &&
+	mkdir -p app/app/lib/${HOST}/ && cd app &&
+	cp ../raw/libssl.so app/lib/${HOST}/ &&
+	cp ../raw/libreadline.so app/lib/${HOST}/ &&
+	cp ../raw/libpanel.so app/lib/${HOST}/ &&
+	cp ../raw/libncurses.so app/lib/${HOST}/ &&
+	cp ../raw/libmenu.so app/lib/${HOST}/ &&
+	cp ../raw/libhistory.so app/lib/${HOST}/ &&
+	cp ../raw/libgdbm_compat.so app/lib/${HOST}/ &&
+	cp ../raw/libgdbm.so app/lib/${HOST}/ &&
+	cp ../raw/libform.so app/lib/${HOST}/ &&
+	cp ../raw/libcurses.so app/lib/${HOST}/ &&
+	cp ../raw/libcrypto.so app/lib/${HOST}/ &&
 	mkdir -p include/ lib/ assets &&
 	(cd app/ && cp -r lib/* ../lib/ ) &&
 	rm -r app/ &&
-	cp ../raw/libFLAC.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libFLAC++.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libfreetype.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libogg.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libopenal.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libruby.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libvorbis.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libvorbisenc.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libvorbisfile.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libsfml-*.so lib/${ANDROID_ABI}/ &&
-	cp ../raw/libsfml-*.a lib/${ANDROID_ABI}/ &&
-	mkdir -p include/${ANDROID_ABI} &&
-	cp -r ../usr/local/include/${HOST}-*/* include/${ANDROID_ABI} &&
+	cp ../raw/libFLAC.so lib/${HOST}/ &&
+	cp ../raw/libFLAC++.so lib/${HOST}/ &&
+	cp ../raw/libfreetype.so lib/${HOST}/ &&
+	cp ../raw/libogg.so lib/${HOST}/ &&
+	cp ../raw/libopenal.so lib/${HOST}/ &&
+	cp ../raw/libruby.so lib/${HOST}/ &&
+	cp ../raw/libvorbis.so lib/${HOST}/ &&
+	cp ../raw/libvorbisenc.so lib/${HOST}/ &&
+	cp ../raw/libvorbisfile.so lib/${HOST}/ &&
+	cp ../raw/libsfml-*.so lib/${HOST}/ &&
+	cp ../raw/libsfml-*.a lib/${HOST}/ &&
+	mkdir -p include/${HOST} &&
+	cp -r ../usr/local/include/${HOST}-*/* include/${HOST} &&
 	cp -r ../usr/local/include/ruby include/ &&
 	cp -r ../usr/local/include/SFML include/ &&
-	cp ../raw/libLiteRGSS.so lib/${ANDROID_ABI}/libLiteRGSS.so &&
-	cp ../raw/libSFMLAudio.so lib/${ANDROID_ABI}/libSFMLAudio.so &&
+	cp ../raw/libLiteRGSS.so lib/${HOST}/libLiteRGSS.so &&
+	cp ../raw/libSFMLAudio.so lib/${HOST}/libSFMLAudio.so &&
 	(cd ../raw && 
-		mkdir -p ../android/assets/${ANDROID_ABI} &&
-		zip -r -q --symlinks ../android/assets/ruby-stdlib.zip ruby -x ruby/*/${HOST}-* &&
-		zip -r -q --symlinks ../android/assets/${ANDROID_ABI}/ruby-stdlib-ext.zip ruby/*/${HOST}-*
+		mkdir -p ../app/assets/${HOST} &&
+		zip -r -q --symlinks ../app/assets/ruby-stdlib.zip ruby -x ruby/*/${HOST}-* &&
+		zip -r -q --symlinks ../app/assets/${HOST}/ruby-stdlib-ext.zip ruby/*/${HOST}-*
 	)
-	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/${HOST}
 	DEPENDS raw)
 
 add_custom_target(raw-zip
 	COMMAND true &&
 	( cd raw && zip -r --symlinks ../app.zip * )
-	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/target/${HOST}
 	DEPENDS raw)
 
-add_custom_target(build DEPENDS host android-app)
+add_custom_target(build DEPENDS host app)
